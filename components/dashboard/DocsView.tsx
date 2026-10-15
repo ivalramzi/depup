@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, ExternalLink, KeyRound, Github, ShieldCheck, Cloud, Link2, AlertTriangle, TramFront } from "lucide-react";
+import { CloudflareIcon, RailwayIcon, VercelIcon } from "@/components/ui/PlatformIcon";
+import { ChevronDown, ExternalLink, ShieldCheck, Link2, AlertTriangle } from "@/components/ui/icons";
+import { Github } from "lucide-react";
 import { ViewFade } from "@/components/ui/ViewFade";
 import { Surface } from "@/components/ui/Surface";
 
@@ -61,7 +63,7 @@ const GUIDES: Guide[] = [
     ],
   },
   {
-    icon: KeyRound,
+    icon: VercelIcon,
     title: "Cara dapetin Vercel Token",
     desc: "Token ini dipakai Depup untuk deploy langsung dari repo GitHub kamu ke Vercel.",
     link: { label: "Buka Vercel Tokens", href: "https://vercel.com/account/tokens" },
@@ -75,7 +77,7 @@ const GUIDES: Guide[] = [
     ],
   },
   {
-    icon: Cloud,
+    icon: CloudflareIcon,
     title: "Cara dapetin Cloudflare API Token",
     desc: "Token ini dipakai Depup untuk membuat & mengelola project Cloudflare Pages kamu — deploy, custom domain, dan environment variables.",
     link: { label: "Buka Cloudflare API Tokens", href: "https://dash.cloudflare.com/profile/api-tokens" },
@@ -102,7 +104,7 @@ const GUIDES: Guide[] = [
     ],
   },
   {
-    icon: TramFront,
+    icon: RailwayIcon,
     title: "Railway di Depup — buat apa & bedanya sama Vercel/Cloudflare?",
     desc: "Baca ini dulu sebelum deploy ke Railway, biar tahu kapan platform ini cocok dipakai lewat Depup.",
     link: { label: "Buka Railway Docs", href: "https://docs.railway.com/" },
@@ -117,7 +119,7 @@ const GUIDES: Guide[] = [
     ],
   },
   {
-    icon: KeyRound,
+    icon: RailwayIcon,
     title: "Cara dapetin Railway Token",
     desc: "Token ini dipakai Depup untuk membuat project & service di akun Railway kamu, lalu deploy dari repo GitHub.",
     link: { label: "Buka Railway Tokens", href: "https://railway.com/account/tokens" },
@@ -187,7 +189,7 @@ function GuideCard({ guide }: { guide: Guide }) {
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-start gap-4 p-5 text-left"
       >
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-violet-500/10 text-violet-400">
+        <span className={`bounce-t grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-tone-lilac text-lav-text ${open ? "scale-[1.07] -rotate-3" : ""}`}>
           <Icon size={20} />
         </span>
         <div className="min-w-0 flex-1">
@@ -196,15 +198,16 @@ function GuideCard({ guide }: { guide: Guide }) {
         </div>
         <ChevronDown
           size={18}
-          className={`mt-1 shrink-0 text-text-faint transition-transform ${open ? "rotate-180" : ""}`}
+          className={`bounce-t mt-1 shrink-0 text-text-faint ${open ? "rotate-180" : ""}`}
         />
       </button>
 
-      {open && (
+      <div className="acc" data-open={open} aria-hidden={!open}>
+       <div className="acc-inner">
         <div className="border-t px-5 pb-5 pt-4" style={{ borderColor: "var(--surface-line)" }}>
           <ol className="space-y-4">
             {guide.steps.map((step, i) => (
-              <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
+              <li key={i} className="acc-step flex gap-3 text-[13px] leading-relaxed" style={{ "--i": i } as React.CSSProperties}>
                 <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[var(--pill-bg)] text-[11px] font-semibold text-text-muted">
                   {i + 1}
                 </span>
@@ -216,12 +219,14 @@ function GuideCard({ guide }: { guide: Guide }) {
             href={guide.link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="pill mt-5 inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium hover:brightness-110"
+            className="acc-step pill mt-5 inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium hover:brightness-110"
+            style={{ "--i": guide.steps.length } as React.CSSProperties}
           >
             {guide.link.label} <ExternalLink size={12} />
           </a>
         </div>
-      )}
+       </div>
+      </div>
     </Surface>
   );
 }
@@ -231,7 +236,7 @@ export function DocsView() {
     <ViewFade>
       <div className="space-y-6">
         <div>
-          <h2 className="text-[22px] font-semibold">Docs</h2>
+          <h2 className="page-title">Docs</h2>
           <p className="text-[13px] text-text-muted">
             Panduan lengkap setup token, OAuth, serta jenis repo yang didukung — semuanya real, tidak ada simulasi.
           </p>

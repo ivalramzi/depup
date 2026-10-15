@@ -62,18 +62,20 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] w-full flex-col md:flex-row md:items-start">
-      <Sidebar />
-      <div className="min-w-0 flex-1 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
-        <div className="mx-auto max-w-6xl view active" id={view}>
-          {view === "dashboard" && <DashboardHomeView />}
-          {view === "deploy" && <DeployFormView />}
-          {view === "upload" && <UploadView />}
-          {view === "projects" && <ProjectsView />}
-          {view === "domains" && <DomainsView />}
-          {view === "env" && <EnvironmentView />}
-          {view === "docs" && <DocsView />}
-          {view === "settings" && <SettingsView />}
+    <div className="app-canvas">
+      <div className="app-frame flex flex-col md:flex-row md:items-start md:gap-4">
+        <Sidebar />
+        <div className="min-w-0 flex-1 px-2 py-4 sm:px-4 sm:py-5 lg:px-6">
+          <div className="mx-auto max-w-6xl view active" id={view}>
+            {view === "dashboard" && <DashboardHomeView />}
+            {view === "deploy" && <DeployFormView />}
+            {view === "upload" && <UploadView />}
+            {view === "projects" && <ProjectsView />}
+            {view === "domains" && <DomainsView />}
+            {view === "env" && <EnvironmentView />}
+            {view === "docs" && <DocsView />}
+            {view === "settings" && <SettingsView />}
+          </div>
         </div>
       </div>
 

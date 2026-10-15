@@ -1,10 +1,10 @@
 import { GlassPanel } from "@/components/ui/GlassPanel";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/icons";
 
 export function PlaceholderView({ title }: { title: string }) {
   return (
     <GlassPanel className="flex flex-col items-center justify-center gap-3 px-6 py-20 text-center">
-      <span className="stat-icon text-violet-400">
+      <span className="stat-icon text-lav-text">
         <Sparkles size={18} />
       </span>
       <h2 className="text-[16px] font-semibold">{title}</h2>

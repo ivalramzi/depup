@@ -29,11 +29,11 @@ const STEP_LABELS = [
 ];
 
 const LEVEL_STYLE: Record<Level, { tag: string; cls: string }> = {
-  info: { tag: "INFO", cls: "text-sky-300/80" },
-  ok: { tag: " OK ", cls: "text-emerald-300/90" },
-  warn: { tag: "WARN", cls: "text-amber-300/90" },
-  error: { tag: "ERR ", cls: "text-red-300/90" },
-  wait: { tag: "WAIT", cls: "text-white/35" },
+  info: { tag: "INFO", cls: "text-[#6aacda]" },
+  ok: { tag: " OK ", cls: "text-[#66d2ad]" },
+  warn: { tag: "WARN", cls: "text-[#e6c04d]" },
+  error: { tag: "ERR ", cls: "text-[#e6969c]" },
+  wait: { tag: "WAIT", cls: "text-night-35" },
 };
 
 function fmt(ms: number) {
@@ -132,12 +132,12 @@ export function DeployDebugLog({
 
   return (
     <div
-      className={cn("rounded-xl bg-black/40 border border-white/[0.07] text-left", className)}
+      className={cn("rounded-xl bg-[#120b2e]/60 text-left", className)}
       role="log"
       aria-live="off"
       aria-label="Log proses debug"
     >
-      <div className="flex items-center justify-between px-3 pt-2 text-[10px] uppercase tracking-wider text-white/30">
+      <div className="flex items-center justify-between px-3 pt-2 text-[10px] uppercase tracking-wider text-night-30">
         <span>Debug log</span>
         <span>{lines.length} baris</span>
       </div>
@@ -145,14 +145,14 @@ export function DeployDebugLog({
         ref={boxRef}
         className={cn("mt-1 overflow-y-auto px-3 pb-2.5 font-mono text-[10.5px] leading-[1.6]", maxHeightClass)}
       >
-        {lines.length === 0 && <div className="text-white/30">Belum ada log.</div>}
+        {lines.length === 0 && <div className="text-night-30">Belum ada log.</div>}
         {lines.map((l) => {
           const st = LEVEL_STYLE[l.level];
           return (
             <div key={l.id} className="flex gap-2 break-words">
-              <span className="shrink-0 text-white/25">{fmt(l.at)}</span>
+              <span className="shrink-0 text-night-25">{fmt(l.at)}</span>
               <span className={cn("shrink-0 whitespace-pre", st.cls)}>{st.tag}</span>
-              <span className={cn("min-w-0 whitespace-pre-wrap break-words", l.level === "wait" ? "text-white/35" : "text-white/70")}>
+              <span className={cn("min-w-0 whitespace-pre-wrap break-words", l.level === "wait" ? "text-night-35" : "text-night-70")}>
                 {l.text}
               </span>
             </div>

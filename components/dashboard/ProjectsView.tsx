@@ -1,23 +1,22 @@
 "use client";
 
 import * as React from "react";
-import {
-  FolderOpen,
-  ExternalLink,
-  RotateCw,
-  Globe2,
-  RefreshCw,
-  ShieldAlert,
-  Trash2,
-  X,
-  Download,
-  AlertTriangle,
-} from "lucide-react";
+import { FolderOpen, ExternalLink, RotateCw, Globe2, RefreshCw, ShieldAlert, Trash2, X, Download, AlertTriangle } from "@/components/ui/icons";
 import { Surface } from "@/components/ui/Surface";
 import { ViewFade } from "@/components/ui/ViewFade";
 import { useDeploy } from "@/lib/deploy-context";
 import { deployDomainToUrl, normalizeDeployDomain } from "@/lib/utils";
 import type { CloudflareProjectSummary, HistoryItem, Platform, RailwayProjectSummary, VercelProjectSummary } from "@/types";
+
+const BULAN: Record<string, string> = {
+  jan: "Januari", feb: "Februari", mar: "Maret", apr: "April", may: "Mei", jun: "Juni",
+  jul: "Juli", aug: "Agustus", sep: "September", sept: "September", oct: "Oktober", nov: "November", dec: "Desember",
+};
+
+/** "13 Oct 2026" → "13 Oktober 2026" (nama bulan lain dibiarkan apa adanya). */
+function tanggalIndonesia(date: string) {
+  return date.replace(/[A-Za-z]+/g, (w) => BULAN[w.toLowerCase().slice(0, w.toLowerCase().startsWith("sept") ? 4 : 3)] ?? w);
+}
 
 function groupByProject(history: HistoryItem[]) {
   const safeHistory = Array.isArray(history) ? history : [];
@@ -70,12 +69,12 @@ function DeleteSwitch({
         aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}
-        className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-          checked ? "border-red-400/60 bg-red-500" : "border-[var(--surface-line)] bg-[var(--row-hover)]"
+        className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+          checked ? "bg-red-500" : "bg-[var(--line-strong)]"
         }`}
       >
         <span
-          className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+          className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300 [transition-timing-function:var(--ease-soft)] ${
             checked ? "translate-x-5" : "translate-x-0"
           }`}
         />
@@ -206,10 +205,10 @@ function DeleteProjectModal({
         : "Hapus";
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4">
-      <Surface className="w-full max-w-sm p-6">
+    <div className="anim-fade fixed inset-0 z-[100] flex items-center justify-center bg-[#120b2e]/70 px-4">
+      <Surface className="anim-pop w-full max-w-sm p-6">
         <div className="flex items-center justify-between mb-4">
-          <span className="stat-icon text-red-400">
+          <span className="stat-icon text-red-700 dark:text-red-300">
             <AlertTriangle size={18} />
           </span>
           <button
@@ -227,7 +226,7 @@ function DeleteProjectModal({
           disentuh. Nyalakan saklar di bawah kalau ingin ikut menghapusnya.
         </p>
 
-        <div className="mb-5 space-y-4 rounded-2xl border border-[var(--surface-line)] p-4">
+        <div className="mb-5 space-y-4 rounded-2xl bg-[var(--surface-solid-2)] p-4">
           <DeleteSwitch
             id="deleteAlsoDepup"
             title="Hapus di Depup"
@@ -278,7 +277,7 @@ function DeleteProjectModal({
                 placeholder="nama-akun/nama-repo"
                 spellCheck={false}
                 autoComplete="off"
-                className="mono w-full rounded-xl border border-[var(--surface-line)] bg-[var(--surface-solid-2)] px-3 py-2 text-[12.5px] outline-none focus:border-red-400/60"
+                className="mono w-full rounded-xl bg-[var(--surface-solid-2)] px-3 py-2 text-[12.5px] outline-none focus:shadow-[inset_0_0_0_2px_var(--bad-line)]"
               />
               <p className="mt-1 text-[11px] text-text-faint">
                 {repoLookup === "loading"
@@ -294,12 +293,12 @@ function DeleteProjectModal({
         </div>
 
         {deleteGithub && canDeleteGithub && (
-          <div className="mb-4 rounded-xl border border-amber-500/25 bg-amber-500/10 px-3 py-2.5 text-[12px] leading-relaxed text-amber-300">
+          <div className="mb-4 rounded-xl bg-[var(--warn-bg)] px-3 py-2.5 text-[12px] leading-relaxed text-amber-700 dark:text-amber-300">
             <p className="flex items-start gap-2 font-medium">
               <ShieldAlert size={14} className="mt-0.5 shrink-0" />
               Pastikan GitHub Token kamu boleh menghapus repo.
             </p>
-            <p className="mt-1 pl-[22px] text-amber-300/90">
+            <p className="mt-1 pl-[22px] text-amber-700 dark:text-amber-300">
               Token classic harus punya scope <span className="mono">delete_repo</span>; token fine-grained harus punya{" "}
               <span className="mono">Administration: Read and write</span>. Kalau tidak, project di platform tetap
               terhapus tapi repo GitHub gagal dihapus.{" "}
@@ -318,7 +317,7 @@ function DeleteProjectModal({
         )}
 
         {destructive && (
-          <p className="mb-4 flex items-start gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-[12px] leading-relaxed text-red-400">
+          <p className="mb-4 flex items-start gap-2 rounded-xl bg-[var(--bad-bg)] px-3 py-2 text-[12px] leading-relaxed text-red-700 dark:text-red-300">
             <AlertTriangle size={14} className="mt-0.5 shrink-0" />
             Penghapusan di {targets.slice(1).join(" dan ")} tidak bisa dibatalkan.
           </p>
@@ -415,8 +414,8 @@ function ImportProjectModal({ open, onClose }: { open: boolean; onClose: () => v
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4">
-      <Surface className="w-full max-w-md p-6">
+    <div className="anim-fade fixed inset-0 z-[100] flex items-center justify-center bg-[#120b2e]/70 px-4">
+      <Surface className="anim-pop w-full max-w-md p-6">
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-[15px] font-semibold">Import Project</h3>
           <button
@@ -435,10 +434,10 @@ function ImportProjectModal({ open, onClose }: { open: boolean; onClose: () => v
               key={t}
               type="button"
               onClick={() => setTab(t)}
-              className={`rounded-xl border px-3.5 py-1.5 text-[12.5px] font-medium capitalize transition-colors ${
+              className={`rounded-xl px-3.5 py-1.5 text-[12.5px] font-medium capitalize transition-colors ${
                 tab === t
-                  ? "border-violet-500/50 bg-violet-500/15 text-text"
-                  : "border-[var(--surface-line)] bg-[var(--surface-solid-2)] text-text-muted hover:text-text"
+                  ? "chip-on"
+                  : "bg-[var(--surface-solid-2)] text-text-muted hover:text-text"
               }`}
             >
               {t}
@@ -448,7 +447,7 @@ function ImportProjectModal({ open, onClose }: { open: boolean; onClose: () => v
 
         {!connected ? (
           <div className="flex flex-col items-center gap-3 py-10 text-center">
-            <ShieldAlert size={36} className="text-amber-400" />
+            <ShieldAlert size={36} className="text-amber-700 dark:text-amber-300" />
             <p className="text-[13px] text-text-muted max-w-xs">{error}</p>
           </div>
         ) : loading ? (
@@ -458,7 +457,7 @@ function ImportProjectModal({ open, onClose }: { open: boolean; onClose: () => v
           </div>
         ) : error ? (
           <div className="flex flex-col items-center gap-3 py-10 text-center">
-            <ShieldAlert size={36} className="text-red-400" />
+            <ShieldAlert size={36} className="text-red-700 dark:text-red-300" />
             <p className="text-[13px] text-text-muted max-w-xs">{error}</p>
           </div>
         ) : candidates.length === 0 ? (
@@ -473,7 +472,7 @@ function ImportProjectModal({ open, onClose }: { open: boolean; onClose: () => v
             {candidates.map((p) => (
               <div
                 key={p.id}
-                className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--surface-line)] px-3.5 py-2.5"
+                className="flex items-center justify-between gap-3 rounded-2xl bg-[var(--surface-solid-2)] px-3.5 py-2.5"
               >
                 <div className="min-w-0">
                   <p className="truncate text-[13px] font-medium">{p.name}</p>
@@ -523,6 +522,14 @@ export function ProjectsView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vercelToken, savedCloudflareToken, savedRailwayToken]);
 
+  function canCheck(platform: Platform) {
+    return (
+      (platform === "vercel" && Boolean(vercelToken)) ||
+      (platform === "cloudflare" && Boolean(savedCloudflareToken)) ||
+      (platform === "railway" && Boolean(savedRailwayToken))
+    );
+  }
+
   async function handleCheck(name: string, platform: Platform) {
     const key = `${name}::${platform}`;
     setCheckingKey(key);
@@ -535,7 +542,7 @@ export function ProjectsView() {
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold">Projects</h2>
+            <h2 className="page-title">Projects</h2>
             <p className="text-sm text-text-muted">
               {projects.length} project {platformTab !== "all" ? `(${platformTab}) ` : ""}unik dari riwayat deployment kamu.
             </p>
@@ -544,7 +551,7 @@ export function ProjectsView() {
             <button
               type="button"
               onClick={() => setImportOpen(true)}
-              className="pill inline-flex items-center gap-2 px-4 py-2 text-sm font-medium hover:brightness-110"
+              className="pill inline-flex h-10 items-center gap-2 px-4 text-[13px] font-medium hover:brightness-110"
             >
               <Download size={13} /> Import Project
             </button>
@@ -553,7 +560,7 @@ export function ProjectsView() {
                 type="button"
                 onClick={() => void syncAllProjects()}
                 disabled={syncingProjects}
-                className="pill inline-flex items-center gap-2 px-4 py-2 text-sm font-medium hover:brightness-110 disabled:opacity-50"
+                className="pill inline-flex h-10 items-center gap-2 px-4 text-[13px] font-medium hover:brightness-110 disabled:opacity-50"
               >
                 <RefreshCw size={13} className={syncingProjects ? "animate-spin" : ""} />
                 {syncingProjects ? "Sinkronisasi..." : "Sinkronkan"}
@@ -572,10 +579,10 @@ export function ProjectsView() {
               key={t}
               type="button"
               onClick={() => setPlatformTab(t)}
-              className={`rounded-xl border px-3.5 py-1.5 text-[12.5px] font-medium capitalize transition-colors ${
+              className={`rounded-full px-4 py-1.5 text-[12.5px] font-medium capitalize transition-colors ${
                 platformTab === t
-                  ? "border-violet-500/50 bg-violet-500/15 text-text"
-                  : "border-[var(--surface-line)] bg-[var(--surface-solid-2)] text-text-muted hover:text-text"
+                  ? "chip-on"
+                  : "bg-[var(--surface-solid-2)] text-text-muted hover:text-text"
               }`}
             >
               {t === "all" ? "Semua" : t}
@@ -597,99 +604,62 @@ export function ProjectsView() {
               const isReady = project.status === "ready";
               const isChecking = checkingKey === `${project.name}::${project.platform}`;
               return (
-                <Surface key={`${project.name}::${project.platform}`} className="p-5">
+                <Surface key={`${project.name}::${project.platform}`} className="p-5 transition-transform hover:-translate-y-0.5">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <h3 className="truncate text-base light:text-black dark:text-white font-semibold">{project.name}</h3>
-                      <p className="mono text-xs text-text-faint capitalize mt-0.5">
-                        {project.platform} • {project.date}
-                      </p>
-                    </div>
-                    <span
-                      className={`shrink-0 inline-flex items-center gap-1.5 rounded-pill border px-2.5 py-0.5 text-xs font-medium ${isReady
-                          ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-                          : "border-red-500/20 bg-red-500/10 text-red-400"
-                        }`}
-                    >
-                      <span className={`h-1.5 w-1.5 rounded-full ${isReady ? "bg-emerald-400" : "bg-red-400"}`} />
+                    <h3 className="min-w-0 truncate text-[17px] font-semibold tracking-[-0.01em]">{project.name}</h3>
+                    <span className="chip shrink-0">
+                      <span className={`h-1.5 w-1.5 rounded-full ${isReady ? "bg-emerald-500" : "bg-red-500"}`} />
                       {isReady ? "Ready" : "Failed"}
                     </span>
                   </div>
 
-                  <div className="mt-3 flex items-center gap-1.5 text-sm text-text-muted">
-                    <Globe2 size={13} className="shrink-0" />
-                    <span className="mono truncate">{project.domain}</span>
+                  <div className="mt-4 text-[12px] leading-[1.45] text-text-muted">
+                    <p className="capitalize">{project.platform}</p>
+                    <p>{tanggalIndonesia(project.date)}</p>
                   </div>
 
-                  <div className="mt-5 flex items-center gap-2">
+                  <div className="mt-4 flex items-center gap-1.5 text-[12.5px] text-text-muted">
+                    <Globe2 size={14} className="shrink-0" />
+                    <span className="truncate">{project.domain}</span>
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-2 gap-2">
                     <a
                       href={deployDomainToUrl(project.domain, project.platform)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pill flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium hover:brightness-110"
+                      className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full bg-violet-500 px-3 text-[12px] font-semibold text-white transition hover:brightness-110 active:scale-[0.98]"
                     >
                       <ExternalLink size={13} /> Visit
                     </a>
                     <button
                       type="button"
                       onClick={() => redeploy(project.name)}
-                      className="pill flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium hover:brightness-110"
+                      className="pill inline-flex h-9 items-center justify-center gap-1.5 px-3 text-[12px] font-semibold hover:brightness-110"
                     >
                       <RotateCw size={13} /> Redeploy
                     </button>
                   </div>
 
-                  {project.platform === "vercel" && vercelToken && (
-                    <div className="mt-2 flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => void handleCheck(project.name, project.platform)}
-                        disabled={isChecking}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-text-faint hover:text-text disabled:opacity-50"
-                      >
-                        <RefreshCw size={11} className={isChecking ? "animate-spin" : ""} />
-                        {isChecking ? "Mengecek..." : "Cek status di Vercel"}
-                      </button>
-                    </div>
-                  )}
-
-                  {project.platform === "cloudflare" && savedCloudflareToken && (
-                    <div className="mt-2 flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => void handleCheck(project.name, project.platform)}
-                        disabled={isChecking}
-                        className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-text-faint hover:text-text disabled:opacity-50"
-                      >
-                        <RefreshCw size={11} className={isChecking ? "animate-spin" : ""} />
-                        {isChecking ? "Mengecek..." : "Cek status di Cloudflare"}
-                      </button>
-                    </div>
-                  )}
-
-                  {project.platform === "railway" && savedRailwayToken && (
-                    <div className="mt-2 flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => void handleCheck(project.name, project.platform)}
-                        disabled={isChecking}
-                        className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-text-faint hover:text-text disabled:opacity-50"
-                      >
-                        <RefreshCw size={11} className={isChecking ? "animate-spin" : ""} />
-                        {isChecking ? "Mengecek..." : "Cek status di Railway"}
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="mt-1">
+                  {canCheck(project.platform) && (
                     <button
                       type="button"
-                      onClick={() => setDeleteTarget(project)}
-                      className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-400 hover:brightness-110"
+                      onClick={() => void handleCheck(project.name, project.platform)}
+                      disabled={isChecking}
+                      className="pill mt-2 inline-flex h-9 w-full items-center justify-center gap-1.5 px-3 text-[12px] font-semibold hover:brightness-110 disabled:opacity-50"
                     >
-                      <Trash2 size={12} /> Hapus Project
+                      <RefreshCw size={13} className={isChecking ? "animate-spin" : ""} />
+                      {isChecking ? "Mengecek..." : "Cek Status"}
                     </button>
-                  </div>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setDeleteTarget(project)}
+                    className="mt-2 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-[#e0534d] px-3 text-[12px] font-semibold text-white transition hover:brightness-110 active:scale-[0.98]"
+                  >
+                    <Trash2 size={13} /> Hapus Project
+                  </button>
                 </Surface>
               );
             })}

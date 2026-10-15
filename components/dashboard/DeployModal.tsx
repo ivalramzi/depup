@@ -1,17 +1,8 @@
 "use client";
 
 import * as React from "react";
-import {
-  Check,
-  Copy,
-  Loader2,
-  Rocket,
-  CircleAlert,
-  ExternalLink,
-  RotateCw,
-  Terminal,
-  X,
-} from "lucide-react";
+import { GlyphText, InlineIcon } from "@/components/ui/Icon";
+import { Check, Copy, Loader2, Rocket, CircleAlert, ExternalLink, RotateCw, Terminal, X } from "@/components/ui/icons";
 import { cn, normalizeDeployDomain, deployDomainToUrl } from "@/lib/utils";
 import { useDeploy } from "@/lib/deploy-context";
 import { useDialogA11y } from "@/components/ui/useDialogA11y";
@@ -69,10 +60,10 @@ export function DeployModal() {
         @keyframes dcSpin     { to { transform: rotate(360deg) } }
       `}</style>
 
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+      <div data-theme="dark" className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 text-white">
         {/* backdrop */}
         <div
-          className="absolute inset-0 bg-[#06060a]/80 backdrop-blur-[14px]"
+          className="absolute inset-0 bg-[#1E1150]/65 backdrop-blur-[10px]"
           onClick={onBackdropClick}
         />
 
@@ -83,22 +74,21 @@ export function DeployModal() {
           aria-modal="true"
           aria-label={title || "Proses deploy"}
           tabIndex={-1}
-          className="relative w-full max-w-[520px] rounded-[28px] bg-[#15151f] border border-white/[0.08] shadow-[0_20px_80px_-20px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.05)_inset] overflow-hidden flex flex-col max-h-[90vh] outline-none"
+          className="relative w-full max-w-[520px] rounded-[32px] bg-[#1E1150] shadow-[0_20px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[90vh] outline-none"
           style={{ animation: "dcModalIn .3s ease" }}
         >
-          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/15 to-transparent shrink-0" />
 
           {/* ================= HEADER ================= */}
           <div className="px-7 md:px-8 pt-6 pb-5 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
               <div
                 className={cn(
-                  "w-9 h-9 rounded-xl border flex items-center justify-center",
+                  "w-9 h-9 rounded-xl flex items-center justify-center",
                   isError
-                    ? "bg-red-500/10 border-red-500/20 text-red-300"
+                    ? "bg-[#33164f] text-red-300"
                     : isDone
-                      ? "bg-emerald-400/10 border-emerald-400/20 text-emerald-300"
-                      : "bg-[#1e1e2f] border-white/10 text-white/70",
+                      ? "bg-[#202457] text-emerald-300"
+                      : "bg-[#2b1b6b] text-night-70",
                 )}
               >
                 {isError ? (
@@ -117,7 +107,7 @@ export function DeployModal() {
                       ? "Deploy Berhasil"
                       : "Deploy Console"}
                 </div>
-                <div className="text-[11px] text-white/40 mt-1">
+                <div className="text-[11px] text-night-40 mt-1">
                   {isDeploying
                     ? "Sedang menyiapkan deploy..."
                     : isDone
@@ -131,10 +121,10 @@ export function DeployModal() {
               <button
                 type="button"
                 onClick={closeModal}
-                className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="w-8 h-8 rounded-full bg-night-6 flex items-center justify-center hover:bg-night-10 transition-colors"
                 aria-label="Tutup"
               >
-                <X className="w-4 h-4 text-white/60" />
+                <X className="w-4 h-4 text-night-60" />
               </button>
             )}
           </div>
@@ -152,22 +142,22 @@ export function DeployModal() {
                         className={cn(
                           "relative h-[28px] flex-1 rounded-full overflow-hidden transition-all duration-500",
                           complete
-                            ? "bg-white"
+                            ? "bg-lav"
                             : active
-                              ? "bg-white/20"
-                              : "bg-white/[0.07]",
+                              ? "bg-night-20"
+                              : "bg-night-7",
                         )}
                       >
                         {active && (
                           <div
-                            className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/40"
+                            className="absolute inset-0 bg-gradient-to-r from-night-20 to-night-40"
                             style={{ animation: "dcShimmer 1.5s infinite" }}
                           />
                         )}
                         {complete && (
                           <div className="absolute inset-0 flex items-center justify-center">
                             <Check
-                              className="w-3 h-3 text-black"
+                              className="w-3 h-3 text-[#1e1150]"
                               strokeWidth={3}
                             />
                           </div>
@@ -177,7 +167,7 @@ export function DeployModal() {
                         <div
                           className={cn(
                             "w-1 h-1 rounded-full",
-                            stepIndex > i ? "bg-white" : "bg-white/15",
+                            stepIndex > i ? "bg-lav" : "bg-night-15",
                           )}
                         />
                       )}
@@ -186,7 +176,7 @@ export function DeployModal() {
                 })}
               </div>
 
-              <div className="mt-2 flex justify-between text-[10px] tracking-wide text-white/25 uppercase">
+              <div className="mt-2 flex justify-between text-[10px] tracking-wide text-night-25 uppercase">
                 <span>1. Mulai deploy</span>
                 <span>2. Input + Penjelasan</span>
                 <span>3. Token & Deploy</span>
@@ -194,7 +184,7 @@ export function DeployModal() {
             </div>
           )}
 
-          <div className="h-[1px] bg-white/[0.06] mx-7 md:mx-8 shrink-0" />
+          <div className="h-[1px] bg-night-6 mx-7 md:mx-8 shrink-0" />
 
           {/* ================= BODY ================= */}
           <div className="px-7 md:px-8 py-6 min-h-[300px] overflow-y-auto flex-1">
@@ -209,13 +199,13 @@ export function DeployModal() {
                 ) : (
                   /* spinner (default) */
                   <div className="relative w-16 h-16 mx-auto">
-                    <div className="absolute inset-0 rounded-full border-2 border-white/[0.06]" />
+                    <div className="absolute inset-0 rounded-full border-2 border-night-6" />
                     <div
-                      className="absolute inset-0 rounded-full border-2 border-transparent border-t-white/80"
+                      className="absolute inset-0 rounded-full border-2 border-transparent border-t-night-80"
                       style={{ animation: "dcSpin 1s linear infinite" }}
                     />
-                    <div className="absolute inset-2 rounded-full bg-[#1e1e2f] flex items-center justify-center">
-                      <Rocket className="w-5 h-5 text-white/70" />
+                    <div className="absolute inset-2 rounded-full bg-[#2b1b6b] flex items-center justify-center">
+                      <Rocket className="w-5 h-5 text-night-70" />
                     </div>
                   </div>
                 )}
@@ -223,15 +213,15 @@ export function DeployModal() {
                 <div className="mt-5 text-[15px] font-medium">
                   {title || "Sedang menyiapkan deploy..."}
                 </div>
-                <div className="mt-1.5 text-[12px] text-white/40 max-w-[340px] mx-auto leading-relaxed">
+                <div className="mt-1.5 text-[12px] text-night-40 max-w-[340px] mx-auto leading-relaxed">
                   {subtitle}
                 </div>
 
                 {/* progress bar pakai barWidth dari context */}
                 <div className="mt-6 max-w-[280px] mx-auto">
-                  <div className="h-1 rounded-full bg-white/10 overflow-hidden">
+                  <div className="h-1 rounded-full bg-night-10 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 transition-all duration-500"
+                      className="h-full rounded-full bg-gradient-to-r from-lav to-[#5CE1FF] transition-all duration-500"
                       style={{ width: `${barWidth}%` }}
                     />
                   </div>
@@ -248,22 +238,22 @@ export function DeployModal() {
                         className={cn(
                           "flex items-center gap-2 text-[11px]",
                           done
-                            ? "text-white/70"
+                            ? "text-night-70"
                             : active
                               ? "text-white"
-                              : "text-white/40",
+                              : "text-night-40",
                         )}
                       >
                         <div
                           className={cn(
                             "w-4 h-4 rounded-full flex items-center justify-center transition-colors shrink-0",
-                            done ? "bg-emerald-400/30" : "bg-white/10",
+                            done ? "bg-[#254b66]" : "bg-night-10",
                           )}
                         >
                           {done ? (
                             <Check className="w-2.5 h-2.5 text-emerald-300" />
                           ) : active ? (
-                            <Loader2 className="w-2.5 h-2.5 animate-spin text-white/70" />
+                            <Loader2 className="w-2.5 h-2.5 animate-spin text-night-70" />
                           ) : null}
                         </div>
                         <span className="truncate">{label}</span>
@@ -282,14 +272,14 @@ export function DeployModal() {
                 className="py-4 text-center"
                 style={{ animation: "dcFadeIn .4s ease" }}
               >
-                <div className="w-14 h-14 mx-auto rounded-full bg-emerald-400/15 border border-emerald-400/20 flex items-center justify-center">
+                <div className="w-14 h-14 mx-auto rounded-full bg-[#212e5b] flex items-center justify-center">
                   <Check className="w-7 h-7 text-emerald-300" strokeWidth={3} />
                 </div>
 
                 <div className="mt-5 text-[18px] font-semibold">
-                  Deploy dimulai! 🚀
+                  Deploy dimulai! <InlineIcon name="rocket_launch" className="ml-1" />
                 </div>
-                <div className="mt-1.5 text-[13px] text-white/45 max-w-[320px] mx-auto leading-relaxed">
+                <div className="mt-1.5 text-[13px] text-night-45 max-w-[320px] mx-auto leading-relaxed">
                   Project{" "}
                   <span className="text-white font-medium">
                     {result?.name || "my-project"}
@@ -298,32 +288,32 @@ export function DeployModal() {
                 </div>
 
                 {/* logs panel */}
-                <div className="mt-6 p-3 rounded-xl bg-[#1e1e2f] border border-white/[0.06] text-left">
-                  <div className="text-[11px] uppercase tracking-wide text-white/30">
+                <div className="mt-6 p-3 rounded-xl bg-[#2b1b6b] text-left">
+                  <div className="text-[11px] uppercase tracking-wide text-night-30">
                     Logs
                   </div>
-                  <div className="mt-2 font-mono text-[11px] leading-[1.6] text-white/60">
+                  <div className="mt-2 font-mono text-[11px] leading-[1.6] text-night-60">
                     <div>
-                      <span className="text-white/25">$</span>{" "}
+                      <span className="text-night-25">$</span>{" "}
                       {result?.domain?.includes("pages.dev")
                         ? "wrangler pages deploy"
                         : "vercel --prod --token ****"}
                     </div>
-                    <div className="text-emerald-300/70">
-                      ✓ Project created: {result?.name || "my-project"}
+                    <div className="text-[#56a798]">
+                      <GlyphText>{`✓ Project created: ${result?.name || "my-project"}`}</GlyphText>
                     </div>
                     {result?.domain && (
-                      <div className="text-emerald-300/70">
-                        ✓ Deployed: {normalizeDeployDomain(result.domain)}
+                      <div className="text-[#56a798]">
+                        <GlyphText>{`✓ Deployed: ${normalizeDeployDomain(result.domain)}`}</GlyphText>
                       </div>
                     )}
-                    <div className="text-white/40">→ Building...</div>
+                    <div className="text-night-40"><GlyphText>→ Building...</GlyphText></div>
                   </div>
                 </div>
 
                 {prefs.showDebug && debugLines.length > 0 && (
                   <details className="mt-4 text-left">
-                    <summary className="cursor-pointer select-none text-center text-[11.5px] text-white/35 hover:text-white/55">
+                    <summary className="cursor-pointer select-none text-center text-[11.5px] text-night-35 hover:text-night-55">
                       Lihat log proses debug
                     </summary>
                     <DeployDebugLog lines={debugLines} className="mt-2" />
@@ -339,7 +329,7 @@ export function DeployModal() {
                       }
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[12px] text-violet-400 hover:text-white underline underline-offset-4 transition-colors"
+                      className="inline-flex items-center gap-1 text-[12px] text-lav hover:text-white underline underline-offset-4 transition-colors"
                     >
                       Buka {normalizeDeployDomain(result.domain)}{" "}
                       <ExternalLink className="w-3 h-3 shrink-0" />
@@ -352,7 +342,7 @@ export function DeployModal() {
                   <button
                     type="button"
                     onClick={handleCloseAfterDeploy}
-                    className="h-10 px-5 rounded-full bg-white text-black text-[13px] font-medium hover:bg-white/90 transition-colors"
+                    className="h-10 px-5 rounded-full bg-lav text-ink text-[13px] font-medium hover:bg-[#D3F65F] transition-colors"
                   >
                     Selesai
                   </button>
@@ -362,7 +352,7 @@ export function DeployModal() {
                       href={result.inspectorUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="h-10 px-5 rounded-full bg-white/[0.08] border border-white/10 text-white/70 text-[13px] font-medium flex items-center gap-2 hover:bg-white/[0.12] transition-colors"
+                      className="h-10 px-5 rounded-full bg-night-8 text-night-70 text-[13px] font-medium flex items-center gap-2 hover:bg-night-12 transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" /> Lihat Logs
                     </a>
@@ -430,24 +420,24 @@ function ErrorPanel({
   return (
     <div className="py-2" style={{ animation: "dcFadeIn .4s ease" }}>
       <div className="text-center">
-        <div className="w-12 h-12 mx-auto rounded-full bg-red-400/15 border border-red-400/20 flex items-center justify-center">
+        <div className="w-12 h-12 mx-auto rounded-full bg-[#3f1f55] flex items-center justify-center">
           <CircleAlert className="w-6 h-6 text-red-300" />
         </div>
         <div className="mt-4 text-[17px] font-semibold">{title}</div>
-        <div className="mt-1.5 text-[13px] text-white/55 max-w-[400px] mx-auto leading-relaxed">
+        <div className="mt-1.5 text-[13px] text-night-55 max-w-[400px] mx-auto leading-relaxed">
           {message}
         </div>
       </div>
 
       {guide && guide.steps.length > 0 && (
-        <div className="mt-5 rounded-2xl bg-white/[0.04] border border-white/[0.08] p-4 text-left">
-          <div className="text-[11px] uppercase tracking-wider text-white/40 font-medium mb-2.5">
+        <div className="mt-5 rounded-2xl bg-night-4 p-4 text-left">
+          <div className="text-[11px] uppercase tracking-wider text-night-40 font-medium mb-2.5">
             Yang bisa kamu lakukan
           </div>
           <ol className="space-y-2">
             {guide.steps.map((step, i) => (
-              <li key={i} className="flex gap-2.5 text-[12.5px] text-white/75 leading-relaxed">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-white/10 text-white/70 text-[11px] flex items-center justify-center mt-px">
+              <li key={i} className="flex gap-2.5 text-[12.5px] text-night-75 leading-relaxed">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-night-10 text-night-70 text-[11px] flex items-center justify-center mt-px">
                   {i + 1}
                 </span>
                 <span>{step}</span>
@@ -458,7 +448,7 @@ function ErrorPanel({
       )}
 
       {guide?.suggestPlatform && (
-        <div className="mt-3 text-[12px] text-violet-300/90 text-center">
+        <div className="mt-3 text-[12px] text-lav text-center">
           Saran: pilih <span className="font-semibold">{PLATFORM_NAME[guide.suggestPlatform]}</span> sebagai
           platform tujuan.
         </div>
@@ -472,7 +462,7 @@ function ErrorPanel({
               href={l.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="h-9 px-4 rounded-full bg-white/[0.08] border border-white/10 text-white/80 text-[12px] font-medium flex items-center gap-1.5 hover:bg-white/[0.12] transition-colors"
+              className="h-9 px-4 rounded-full bg-night-8 text-night-80 text-[12px] font-medium flex items-center gap-1.5 hover:bg-night-12 transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" /> {l.label}
             </a>
@@ -482,17 +472,17 @@ function ErrorPanel({
 
       {guide?.technical && (
         <details className="mt-4 group">
-          <summary className="cursor-pointer text-[11.5px] text-white/35 hover:text-white/55 text-center select-none">
+          <summary className="cursor-pointer text-[11.5px] text-night-35 hover:text-night-55 text-center select-none">
             Detail teknis (untuk dilaporkan)
           </summary>
-          <pre className="mt-2 max-h-28 overflow-auto rounded-xl bg-black/30 border border-white/[0.06] p-3 text-[11px] text-white/50 whitespace-pre-wrap break-words font-mono">
+          <pre className="mt-2 max-h-28 overflow-auto rounded-xl bg-[#120b2e]/50 p-3 text-[11px] text-night-50 whitespace-pre-wrap break-words font-mono">
             {guide.technical}
           </pre>
           <div className="mt-2 text-center">
             <button
               type="button"
               onClick={copyDetail}
-              className="text-[11.5px] text-white/50 hover:text-white/80 inline-flex items-center gap-1.5"
+              className="text-[11.5px] text-night-50 hover:text-night-80 inline-flex items-center gap-1.5"
             >
               {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
               {copied ? "Tersalin" : "Salin detail"}
@@ -503,7 +493,7 @@ function ErrorPanel({
 
       {debugLines && debugLines.length > 0 && (
         <details className="mt-4 text-left" open>
-          <summary className="cursor-pointer select-none text-center text-[11.5px] text-white/35 hover:text-white/55">
+          <summary className="cursor-pointer select-none text-center text-[11.5px] text-night-35 hover:text-night-55">
             Log proses debug
           </summary>
           <DeployDebugLog lines={debugLines} className="mt-2" />
@@ -515,7 +505,7 @@ function ErrorPanel({
           <button
             type="button"
             onClick={onRetry}
-            className="h-10 px-5 rounded-full bg-white text-black text-[13px] font-medium hover:bg-white/90 transition-colors flex items-center gap-2"
+            className="h-10 px-5 rounded-full bg-lav text-ink text-[13px] font-medium hover:bg-[#D3F65F] transition-colors flex items-center gap-2"
           >
             <RotateCw className="w-3.5 h-3.5" /> Coba lagi
           </button>
@@ -525,7 +515,7 @@ function ErrorPanel({
             href={logsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="h-10 px-5 rounded-full bg-white/[0.08] border border-white/10 text-white/70 text-[13px] font-medium flex items-center gap-2 hover:bg-white/[0.12] transition-colors"
+            className="h-10 px-5 rounded-full bg-night-8 text-night-70 text-[13px] font-medium flex items-center gap-2 hover:bg-night-12 transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" /> Lihat log
           </a>
@@ -536,8 +526,8 @@ function ErrorPanel({
           className={cn(
             "h-10 px-5 rounded-full text-[13px] font-medium transition-colors",
             retryable
-              ? "bg-white/[0.08] border border-white/10 text-white/70 hover:bg-white/[0.12]"
-              : "bg-white text-black hover:bg-white/90",
+              ? "bg-night-8 text-night-70 hover:bg-night-12"
+              : "bg-lav text-ink hover:bg-[#D3F65F]",
           )}
         >
           {retryable ? "Tutup" : "Mengerti"}

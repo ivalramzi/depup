@@ -1,7 +1,7 @@
 "use client";
 
 import { normalizeDeployDomain } from "@/lib/utils";
-import { CheckCircle2, XCircle, Trash2 } from "lucide-react";
+import { CheckCircle2, XCircle, Trash2 } from "@/components/ui/icons";
 import { Surface } from "@/components/ui/Surface";
 import { useDeploy } from "@/lib/deploy-context";
 
@@ -10,8 +10,8 @@ export function HistoryTable() {
 
   return (
     <Surface className="overflow-hidden">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--surface-line)]">
-        <h3 className="text-[14px] font-semibold">Riwayat Deploy</h3>
+      <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--surface-line)]">
+        <h3 className="text-[16px] font-bold tracking-tight">Riwayat Deploy</h3>
         <span className="mono text-[11px] text-text-faint">{history.length}/10</span>
       </div>
       <div className="overflow-x-auto">
@@ -45,12 +45,12 @@ export function HistoryTable() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <span
-                        className={`grid h-8 w-8 place-items-center rounded-full border ${
+                        className={`grid h-9 w-9 place-items-center rounded-xl ${
                           isDeleted
-                            ? "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+                            ? "bg-[var(--pill-bg)] text-text-faint"
                             : isReady
-                              ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                              : "bg-red-500/10 text-red-400 border-red-500/20"
+                              ? "bg-tone-mint text-emerald-700 dark:text-emerald-300"
+                              : "bg-tone-pink text-red-700 dark:text-red-300"
                         }`}
                       >
                         {isDeleted ? (
@@ -73,17 +73,11 @@ export function HistoryTable() {
                   <td className="px-6 py-4 mono text-[12px] opacity-70">{normalizeDeployDomain(item.domain, item.platform)}</td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center gap-1.5 rounded-pill border px-2.5 py-0.5 text-[11px] font-medium ${
-                        isDeleted
-                          ? "border-zinc-500/20 bg-zinc-500/10 text-zinc-400"
-                          : isReady
-                            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-                            : "border-red-500/20 bg-red-500/10 text-red-400"
-                      }`}
+                      className="chip"
                     >
                       <span
                         className={`dot-flat h-1.5 w-1.5 rounded-full ${
-                          isDeleted ? "bg-zinc-400" : isReady ? "bg-emerald-400" : "bg-red-400"
+                          isDeleted ? "bg-zinc-400" : isReady ? "bg-emerald-500" : "bg-red-500"
                         }`}
                       />
                       {isDeleted ? "Deleted" : isReady ? "Ready" : "Failed"}
@@ -93,7 +87,7 @@ export function HistoryTable() {
                     <button
                       type="button"
                       onClick={() => redeploy(item.name)}
-                      className="pill px-3 py-1 text-[11px] font-medium hover:brightness-110"
+                      className="pill px-3.5 py-1.5 text-[11.5px] font-medium"
                     >
                       {isDeleted ? "Deploy Ulang" : "Redeploy"}
                     </button>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Globe2, Plus, Trash2, X, Copy, Check, RefreshCw } from "lucide-react";
+import { Globe2, Plus, Trash2, X, Copy, Check, RefreshCw } from "@/components/ui/icons";
 import { Surface } from "@/components/ui/Surface";
 import { ViewFade } from "@/components/ui/ViewFade";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -31,9 +31,9 @@ function DnsField({ label, value }: { label: string; value: string }) {
         type="button"
         onClick={handleCopy}
         aria-label={`Salin ${label.toLowerCase()}`}
-        className="grid h-7 w-7 shrink-0 place-items-center rounded-full hover:bg-black/10"
+        className="grid h-7 w-7 shrink-0 place-items-center rounded-full hover:bg-[#120b2e]/10"
       >
-        {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
+        {copied ? <Check size={13} className="text-emerald-700 dark:text-emerald-300" /> : <Copy size={13} />}
       </button>
     </div>
   );
@@ -83,8 +83,8 @@ function AddDomainModal({ open, onClose }: { open: boolean; onClose: () => void 
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4">
-      <Surface className="w-full max-w-sm p-6">
+    <div className="anim-fade fixed inset-0 z-[100] flex items-center justify-center bg-[#120b2e]/70 px-4">
+      <Surface className="anim-pop w-full max-w-sm p-6">
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-[15px] font-semibold">Tambah Domain</h3>
           <button
@@ -207,31 +207,30 @@ export function DomainsView() {
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-[22px] font-semibold">Domains</h2>
+            <h2 className="page-title">Domains</h2>
             <p className="text-[13px] text-text-muted">Kelola custom domain untuk project kamu.</p>
           </div>
-          <button
-            type="button"
-            onClick={() => setModalOpen(true)}
-            className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-[13px]"
-          >
-            <Plus size={15} /> Add Domain
-          </button>
-        </div>
-
-        {(vercelToken || savedCloudflareToken || savedRailwayToken) && (
-          <div className="flex justify-end">
+          <div className="flex flex-wrap items-center gap-2">
+            {(vercelToken || savedCloudflareToken || savedRailwayToken) && (
+              <button
+                type="button"
+                onClick={() => void syncAllDomains()}
+                disabled={syncingDomains}
+                className="pill inline-flex h-10 items-center gap-2 px-4 text-[13px] font-medium hover:brightness-110 disabled:opacity-50"
+              >
+                <RefreshCw size={13} className={syncingDomains ? "animate-spin" : undefined} />
+                {syncingDomains ? "Sinkronisasi..." : "Sinkronkan"}
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => void syncAllDomains()}
-              disabled={syncingDomains}
-              className="pill inline-flex items-center gap-2 px-4 py-2 text-[12.5px] font-medium hover:brightness-110 disabled:opacity-50"
+              onClick={() => setModalOpen(true)}
+              className="btn-primary inline-flex h-10 items-center gap-2 px-4 text-[13px]"
             >
-              <RefreshCw size={13} className={syncingDomains ? "animate-spin" : undefined} />
-              {syncingDomains ? "Sinkronisasi..." : "Sinkronkan"}
+              <Plus size={15} /> Add Domain
             </button>
           </div>
-        )}
+        </div>
 
         {safeDomains.length === 0 ? (
           <Surface className="flex flex-col items-center justify-center gap-3 px-6 py-24 text-center">
@@ -283,11 +282,12 @@ export function DomainsView() {
                             <td className="px-6 py-4 text-[12px] text-text-muted">{d.project}</td>
                             <td className="px-6 py-4">
                               <span
-                                className={`inline-flex items-center gap-1.5 rounded-pill border px-2.5 py-0.5 text-[11px] font-medium ${d.status === "Active"
-                                    ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-                                    : "border-amber-500/20 bg-amber-500/10 text-amber-400"
-                                  }`}
+                                className="chip"
                               >
+                                <span
+                                  className={`h-1.5 w-1.5 rounded-full ${d.status === "Active" ? "bg-emerald-500" : "bg-amber-500"}`}
+                                  aria-hidden="true"
+                                />
                                 {d.status}
                               </span>
                             </td>
@@ -309,7 +309,7 @@ export function DomainsView() {
                                   type="button"
                                   onClick={() => removeDomain(d.id)}
                                   aria-label={`Hapus ${d.domain}`}
-                                  className="pill inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-medium text-red-400 hover:brightness-110"
+                                  className="pill inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-medium text-red-700 dark:text-red-300 hover:brightness-110"
                                 >
                                   <Trash2 size={12} /> Hapus
                                 </button>
@@ -319,7 +319,7 @@ export function DomainsView() {
                           {(d.dns || d.verificationDns) && (
                             <tr className="border-b last:border-0" style={{ borderColor: "var(--surface-line)" }}>
                               <td colSpan={4} className="px-6 pb-4">
-                                <div className="space-y-2 rounded-2xl border border-[var(--surface-line)] p-3.5">
+                                <div className="space-y-2 rounded-2xl bg-[var(--surface-solid-2)] p-3.5">
                                   <p className="text-[11.5px] text-text-muted">
                                     {d.status === "Active"
                                       ? "Sudah aktif. Ini record yang dipakai kalau kamu perlu cek ulang di DNS provider:"

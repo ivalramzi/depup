@@ -1,19 +1,8 @@
 "use client";
 
 import * as React from "react";
-import {
-  UploadCloud,
-  FileArchive,
-  FolderUp,
-  Loader2,
-  Check,
-  CircleAlert,
-  ExternalLink,
-  Rocket,
-  Lock,
-  X,
-  Github,
-} from "lucide-react";
+import { UploadCloud, FileArchive, FolderUp, Loader2, Check, CircleAlert, ExternalLink, Rocket, Lock, X } from "@/components/ui/icons";
+import { Github } from "lucide-react";
 import { ViewFade } from "@/components/ui/ViewFade";
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
@@ -32,7 +21,7 @@ import {
 } from "@/lib/github-upload";
 
 const inputCls =
-  "w-full rounded-xl border border-[var(--line)] bg-[var(--pill-bg)] px-3.5 py-2.5 text-[13px] outline-none transition focus:border-[var(--line-strong)]";
+  "w-full rounded-xl bg-[var(--pill-bg)] px-3.5 py-2.5 text-[13px] outline-none transition focus:shadow-[inset_0_0_0_2px_var(--ring)]";
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -261,7 +250,7 @@ export function UploadView() {
   return (
     <ViewFade>
       <div className="mb-6">
-        <h2 className="text-[22px] font-semibold">Upload Project</h2>
+        <h2 className="page-title">Upload Project</h2>
         <p className="mt-1 text-[13px] text-text-muted">
           Upload zip atau folder project — otomatis diekstrak, dikirim ke repo GitHub baru, dan (kalau mau) langsung
           di-deploy.
@@ -269,7 +258,7 @@ export function UploadView() {
       </div>
 
       {!githubPat.trim() && (
-        <div className="mb-4 flex items-start gap-2.5 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-[12.5px] text-amber-300">
+        <div className="mb-4 flex items-start gap-2.5 rounded-2xl bg-[var(--warn-bg)] px-4 py-3 text-[12.5px] text-amber-700 dark:text-amber-300">
           <CircleAlert size={16} className="mt-0.5 shrink-0" />
           <span>
             Fitur ini butuh <b>GitHub Token</b> (izin <code>repo</code>) untuk membuat repo atas nama kamu.{" "}
@@ -284,7 +273,7 @@ export function UploadView() {
       {error && (
         <div
           role="alert"
-          className="mb-4 flex items-start gap-2.5 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-[12.5px] text-red-300"
+          className="mb-4 flex items-start gap-2.5 rounded-2xl bg-[var(--bad-bg)] px-4 py-3 text-[12.5px] text-red-700 dark:text-red-300"
         >
           <CircleAlert size={16} className="mt-0.5 shrink-0" />
           <span className="min-w-0 flex-1 break-words">{error}</span>
@@ -304,8 +293,8 @@ export function UploadView() {
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           className={cn(
-            "surface-solid flex flex-col items-center rounded-3xl border-2 border-dashed px-6 py-14 text-center transition",
-            dragging ? "border-violet-400 bg-violet-500/10" : "border-[var(--line-strong)]"
+            "surface-solid flex flex-col items-center rounded-[28px] px-6 py-14 text-center transition",
+            dragging ? "scale-[1.01] bg-tone-lilac" : "hover:bg-[var(--card-hover)]"
           )}
         >
           {stage === "reading" ? (
@@ -420,10 +409,10 @@ export function UploadView() {
                     aria-pressed={isPrivate === o.v}
                     onClick={() => setIsPrivate(o.v)}
                     className={cn(
-                      "inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-[13px] transition",
+                      "inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-[13px] transition",
                       isPrivate === o.v
-                        ? "border-violet-400 bg-violet-500/15 text-text"
-                        : "border-[var(--line)] text-text-muted hover:bg-[var(--card-hover)]"
+                        ? "chip-on"
+                        : "bg-[var(--pill-bg)] text-text-muted hover:text-text"
                     )}
                   >
                     {o.icon} {o.label}
@@ -448,7 +437,7 @@ export function UploadView() {
           </label>
 
           {/* Pilihan deploy */}
-          <div className="mt-5 rounded-2xl border border-[var(--line)] p-4">
+          <div className="mt-5 rounded-2xl bg-[var(--surface-solid-2)] p-4">
             <p className="text-[12px] font-medium">Setelah upload…</p>
             <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
               {[
@@ -462,8 +451,8 @@ export function UploadView() {
                   aria-pressed={deployNow === o.v}
                   onClick={() => setDeployNow(o.v)}
                   className={cn(
-                    "rounded-xl border px-3.5 py-3 text-left transition",
-                    deployNow === o.v ? "border-violet-400 bg-violet-500/15" : "border-[var(--line)] hover:bg-[var(--card-hover)]"
+                    "rounded-xl px-3.5 py-3 text-left transition",
+                    deployNow === o.v ? "bg-violet-500 text-white [&_.text-text-muted]:!text-violet-100" : "bg-[var(--pill-bg)] hover:brightness-95"
                   )}
                 >
                   <span className="block text-[13px] font-medium">{o.title}</span>
@@ -475,7 +464,7 @@ export function UploadView() {
             {deployNow && (
               <div className="mt-3">
                 {platforms.length === 0 ? (
-                  <p className="text-[12px] text-amber-300">
+                  <p className="text-[12px] text-amber-700 dark:text-amber-300">
                     Belum ada token platform yang tersimpan.{" "}
                     <button type="button" onClick={() => setView("settings")} className="underline underline-offset-4">
                       Isi token Vercel/Cloudflare/Railway di Settings
@@ -542,7 +531,7 @@ export function UploadView() {
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-[var(--pill-bg)]">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 transition-[width] duration-300"
+                  className="h-full rounded-full bg-gradient-to-r from-lav to-[#5CE1FF] transition-[width] duration-300"
                   style={{ width: `${overallPct}%` }}
                 />
               </div>
@@ -586,7 +575,7 @@ export function UploadView() {
       {/* ---------- Langkah 3: selesai ---------- */}
       {stage === "done" && result && (
         <div className="surface-solid rounded-3xl p-6 text-center sm:p-8">
-          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-emerald-500/15 text-emerald-400">
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[var(--ok-bg)] text-emerald-700 dark:text-emerald-300">
             <Check size={24} />
           </span>
           <h3 className="mt-4 text-[18px] font-semibold">Upload berhasil</h3>

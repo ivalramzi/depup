@@ -591,7 +591,24 @@ export function SpiderCrawler({
         ctx.textBaseline = "alphabetic";
         ctx.font = `600 ${nameFont}px ${MONO}`;
         ctx.fillStyle = `rgba(255,255,255,${0.5 + 0.45 * c.act})`;
-        ctx.fillText(c.name + (done ? " ✓" : ""), lx, ly);
+        ctx.fillText(c.name, lx, ly);
+        if (done) {
+          // centang digambar sebagai garis (bukan karakter teks)
+          const tw = ctx.measureText(c.name).width;
+          const s = nameFont * 0.55;
+          const x0 = lx + tw + 6 * k;
+          ctx.save();
+          ctx.strokeStyle = ctx.fillStyle as string;
+          ctx.lineWidth = Math.max(1.5, 1.7 * k);
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          ctx.beginPath();
+          ctx.moveTo(x0, ly - s * 0.45);
+          ctx.lineTo(x0 + s * 0.4, ly - s * 0.08);
+          ctx.lineTo(x0 + s, ly - s * 0.9);
+          ctx.stroke();
+          ctx.restore();
+        }
         ctx.font = `400 ${subFont}px ${MONO}`;
         ctx.fillStyle = `rgba(200,205,220,${0.38 + 0.3 * c.act})`;
         ctx.fillText(`${n}/${c.total} node · ${status}`, lx, ly + subFont + 2 * k);

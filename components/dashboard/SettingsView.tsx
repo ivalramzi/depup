@@ -3,7 +3,7 @@
 import { notifySessionExpired } from "@/lib/session-expired";
 import * as React from "react";
 import { useTheme } from "next-themes";
-import { Eye, EyeOff, Save, ShieldCheck, ShieldAlert, Loader2, Trash2, Moon, Sun, Bug, Rocket, Network as SpiderIcon } from "lucide-react";
+import { Eye, EyeOff, Save, ShieldCheck, ShieldAlert, Loader2, Trash2, Moon, Sun, Bug, Rocket, Network as SpiderIcon } from "@/components/ui/icons";
 import { Surface } from "@/components/ui/Surface";
 import { ViewFade } from "@/components/ui/ViewFade";
 import { useCloudStorage } from "@/lib/useCloudStorage";
@@ -79,7 +79,7 @@ function TokenField({
               type="button"
               onClick={() => setConfirming(true)}
               aria-label={`Hapus ${label}`}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-red-400 hover:brightness-110"
+              className="inline-flex items-center gap-1 text-[11px] font-medium text-red-700 dark:text-red-300 hover:brightness-110"
             >
               <Trash2 size={11} /> Hapus
             </button>
@@ -89,7 +89,7 @@ function TokenField({
               type="button"
               onClick={onTest}
               disabled={!value?.trim() || check.status === "checking"}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-violet-400 hover:brightness-110 disabled:opacity-40"
+              className="inline-flex items-center gap-1 text-[11px] font-medium text-lav-text hover:brightness-110 disabled:opacity-40"
             >
               {check.status === "checking" && <Loader2 size={11} className="animate-spin" />}
               Test Koneksi
@@ -100,7 +100,7 @@ function TokenField({
       {confirming && onRemove && (
         <div
           role="alert"
-          className="mb-2 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-[12px] text-red-300"
+          className="mb-2 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-[var(--bad-bg)] px-3 py-2 text-[12px] text-red-700 dark:text-red-300"
         >
           <span>Hapus {label} dari akunmu? Deploy ke platform ini tidak bisa jalan sampai diisi lagi.</span>
           <span className="flex gap-3">
@@ -110,7 +110,7 @@ function TokenField({
                 setConfirming(false);
                 onRemove();
               }}
-              className="font-semibold text-red-400 underline underline-offset-2"
+              className="font-semibold text-red-700 dark:text-red-300 underline underline-offset-2"
             >
               Ya, hapus
             </button>
@@ -139,12 +139,12 @@ function TokenField({
         </button>
       </div>
       {check.status === "ok" && (
-        <p className="mt-1.5 inline-flex items-center gap-1.5 text-[11.5px] text-emerald-400">
+        <p className="mt-1.5 inline-flex items-center gap-1.5 text-[11.5px] text-emerald-700 dark:text-emerald-300">
           <ShieldCheck size={13} /> {check.label}
         </p>
       )}
       {check.status === "error" && (
-        <p className="mt-1.5 inline-flex items-center gap-1.5 text-[11.5px] text-red-400">
+        <p className="mt-1.5 inline-flex items-center gap-1.5 text-[11.5px] text-red-700 dark:text-red-300">
           <ShieldAlert size={13} /> {check.message}
         </p>
       )}
@@ -171,7 +171,7 @@ function SwitchRow({
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="flex min-w-0 items-start gap-3">
-        <div className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[var(--surface-line)] text-text-muted">
+        <div className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-tone-lilac text-text">
           {icon}
         </div>
         <div className="min-w-0">
@@ -188,13 +188,13 @@ function SwitchRow({
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={cn(
-          "relative h-7 w-12 shrink-0 rounded-full border transition-colors",
-          checked ? "border-violet-400/60 bg-violet-500" : "border-[var(--surface-line)] bg-[var(--row-hover)]"
+          "relative h-7 w-12 shrink-0 rounded-full transition-colors",
+          checked ? "bg-[var(--ink-fill)]" : "bg-[var(--line-strong)]"
         )}
       >
         <span
           className={cn(
-            "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
+            "absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow transition-transform duration-300 [transition-timing-function:var(--ease-soft)]",
             checked ? "translate-x-5" : "translate-x-0"
           )}
         />
@@ -219,7 +219,7 @@ function AppearanceSettings() {
   return (
     <Surface className="space-y-4 p-4 sm:p-6">
       <div>
-        <h3 className="text-[15px] font-semibold">Tampilan</h3>
+        <h3 className="text-[16px] font-bold tracking-tight">Tampilan</h3>
         <p className="text-[12px] text-text-muted">Pengaturan ini tersimpan di perangkat ini.</p>
       </div>
 
@@ -247,13 +247,13 @@ function AppearanceSettings() {
                 aria-checked={selected}
                 onClick={() => updatePrefs({ deployAnimation: opt.value })}
                 className={cn(
-                  "flex items-start gap-3 rounded-2xl border p-3.5 text-left transition-colors",
+                  "flex items-start gap-3 rounded-2xl p-3.5 text-left transition-colors",
                   selected
-                    ? "border-violet-400/60 bg-violet-500/10"
-                    : "border-[var(--surface-line)] hover:bg-[var(--row-hover)]"
+                    ? "bg-violet-500 text-white [&_.text-text-muted]:!text-violet-100 [&_.text-lav-text]:!text-white"
+                    : "bg-[var(--surface-solid-2)] hover:brightness-95"
                 )}
               >
-                <span className={cn("mt-0.5", selected ? "text-violet-400" : "text-text-muted")}>{opt.icon}</span>
+                <span className={cn("mt-0.5", selected ? "text-lav-text" : "text-text-muted")}>{opt.icon}</span>
                 <span>
                   <span className="block text-[13px] font-medium">{opt.label}</span>
                   <span className="block text-[11.5px] leading-relaxed text-text-muted">{opt.hint}</span>
@@ -382,7 +382,7 @@ export function SettingsView() {
     <ViewFade>
       <div className="space-y-4 sm:space-y-5">
         <div>
-          <h2 className="text-[20px] font-semibold sm:text-[22px]">Settings</h2>
+          <h2 className="page-title">Settings</h2>
           <p className="max-w-3xl text-[12.5px] leading-relaxed text-text-muted sm:text-[13px]">
             Token global ini dipakai sebagai default saat kamu deploy project baru. Klik{" "}
             <span className="font-medium text-text">Test Koneksi</span> untuk memastikan token-nya benar-benar
